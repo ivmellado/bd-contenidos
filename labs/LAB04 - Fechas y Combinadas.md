@@ -23,7 +23,24 @@ Escribe una consulta que devuelva el sueldo medio por departamento para departam
 
 Solución:
 ```sql
-
+CREATE TABLE empleados (
+    id INTEGER PRIMARY KEY,
+    nombre TEXT,
+    dpto INTEGER,
+    sueldo INTEGER
+);
+INSERT INTO empleados (nombre, dpto, sueldo) VALUES
+('Ana', 4, 30000),
+('Luis', 4, 32000),
+('Marta', 5, 35000),
+('Pedro', 5, 31500),
+('Laura', 6, 28000); 
+SELECT 
+    dpto,
+    AVG(sueldo) AS sueldo_medio
+FROM empleados
+GROUP BY dpto
+HAVING COUNT(*) > 1;
 ```
 
 Resultado:
@@ -237,7 +254,12 @@ Escribe una consulta para obtener el nombre, apellido1 y fechaNac de los emplead
 
 Solución:
 ```sql
-
+SELECT
+	nombre, 
+	apellido1, 
+  	fechaNac
+FROM empleado
+WHERE fechaNac BETWEEN DATE('now', '-70 years') AND DATE('now', '-60 years');
 ```
 
 Tabla resultado:
@@ -514,7 +536,20 @@ Escribe una consulta que devuelva los empleados con más de un familiar que no s
 
 Solución:
 ```sql
+--Empleados con mas de un familiar
+SELECT empleado 
+FROM familiar
+GROUP BY empleado
+HAVING COUNT(*) > 1
 
+INTERSECT
+--No supervisores
+SELECT dni 
+FROM empleado
+EXCEPT
+SELECT supervisor AS dni 
+FROM empleado
+WHERE supervisor IS NOT NULL;
 ```
 
 Tabla resultado:
@@ -644,7 +679,21 @@ Escribe una consulta que devuelva el dni de los empleados que no tienen familiar
 
 Solución:
 ```sql
+--Empleados que no tienen familiares
+SELECT dni 
+FROM empleado
+EXCEPT
+SELECT empleado AS dni
+FROM familiar
 
+UNION
+
+--Supervisor con ams de dos empleados a su cargo
+SELECT supervisor AS dni
+FROM empleado
+WHERE supervisor IS NOT NULL
+GROUP BY supervisor
+HAVING COUNT(*) > 2;
 
 ```
 
@@ -765,7 +814,19 @@ Escribe una consulta que devuelva los proyectos del departamento con mayor núme
 
 Solución:
 ```sql
-
+WITH dept_mas_personal AS (
+    SELECT dpto, COUNT(*) AS num_empleados
+    FROM empleado
+    GROUP BY dpto
+    ORDER BY num_empleados DESC
+    LIMIT 1
+)
+SELECT nombre,
+       ubicacion,
+       dpto
+FROM proyecto
+WHERE dpto = (SELECT dpto FROM dept_mas_personal)
+ORDER BY nombre;
 ```
 
 Tabla resultado:

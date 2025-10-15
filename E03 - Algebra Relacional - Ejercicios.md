@@ -27,11 +27,16 @@ FK:
 1.	Datos de los modelos de coche cuya potencia está entre 120 y 200.
 ```
 solución en notación RelaX
+sigma potencia >= 120 AND potencia <= 200(Modelo)
+
+--Otra cosa que nos pidio roberto en clase:
+pi nom_marca, nom_modelo, potencia (sigma potencia >= 120 AND potencia <= 200(Modelo join Marca))
 ```
 
 2.	Nombre y apellidos de las personas que viven en el municipio de Cáceres, en una dirección que contiene una I, ordenando alfabéticamente por apellidos y nombre.
 ```
 solución en notación RelaX
+
 ```
 
 3.	Número de expediente, infractor y fecha de las multas impuestas en el primer semestre del 2023, en la Carretera EX-100, entre el km 10 y el 14.
@@ -47,6 +52,9 @@ solución en notación RelaX
 5.	Nif de las personas que han cometido infracciones y eran a su vez propietarios de un vehículo de marca AUDI.
 ```
 solución en notación RelaX
+R1= pi infractor (Multa)
+R2= pi propietario (sigma nom_marca='AUDI'(Vehiculo join Marca))
+R1 intersect R2
 ```
 
 6.	Obtener el valor medio y máximo del importe de las multas y el número de multas que se han impuesto en el 2022.
